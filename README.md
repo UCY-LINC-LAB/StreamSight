@@ -1,17 +1,22 @@
 # StreamSight
 Query-Driven Framework for Streaming Analytics
 
-##What does StreamSight do?
+## What does StreamSight do?
+
 ...
 
-##Getting Started
+## Getting Started
+
 ...
 
-##Insight Declaration Examples
+## Insight Declaration Examples
+
 ...
 
-##Reference
+## Reference
+
 ...
 
-##License
+## License
+
 ...
