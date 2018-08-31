@@ -1,0 +1,19 @@
+/**********************************************************************
+*
+* The following insights are equivalent and should give the same answer.
+*
+**********************************************************************/
+insight1 =
+   COMPUTE
+      ARITHMETIC_MEAN(m1, 5 SECONDS)
+   EVERY 5 SECONDS WITH SALIENCE 2
+;
+
+insight2 =
+   COMPUTE(
+      SUM(m1, 5 SECONDS)
+      /
+      COUNT(m1, 5 SECONDS)
+   )
+   EVERY 5 SECONDS WITH SALIENCE 1
+;
