@@ -49,8 +49,8 @@ by executing the query on a sample of the data stream.
 ### Build StreamSight
 1. Make sure you've installed [Docker](https://www.docker.com/get-started) on your machine.
 2. Configure (optionally) and submit your queries:
-    * See [this](#Configuration) section for configuring StreamSight.
-    * See [this](#Insight-Declaration-Examples) section for composing your queries.
+    * See [this](#configuration) section for configuring StreamSight.
+    * See [this](#insight-declaration-examples) section for composing your queries.
 3. Build the docker image using the following command:
 ```bash
 docker build -t streamsight -f Dockerfile .
