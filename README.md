@@ -49,8 +49,8 @@ by executing the query on a sample of the data stream.
 ### Build StreamSight
 1. Make sure you've installed [Docker](https://www.docker.com/get-started) on your machine.
 2. Configure (optionally) and submit your queries:
-    * See [this][Configuration] section for configuring StreamSight.
-    * See [this][Composing Queries] section for composing your queries.
+    * See [this](#configuration) section for configuring StreamSight.
+    * See [this](#insight-declaration-examples) section for composing your queries.
 3. Build the docker image using the following command:
 ```bash
 docker build -t streamsight -f Dockerfile .
@@ -63,11 +63,32 @@ docker run -p 4040:4040 -it streamsight
 ```
 
 ### Cluster Mode
-Submit StreamSight to an existing Spark cluster.
+If you have an existing Spark Cluster, you only have to specify the
+address of the master node:
 ```
 MASTER_NODE=spark://${spark-url}
 spark-submit --master $MASTER_NODE ./StreamSight-0.0.1.jar
 ```
+
+
+For convenience, we provide a number of scripts (located in directory **/cluster**)
+to help you setup a Spark cluster via docker-compose.
+The only requirement is to have [docker-compose](https://docs.docker.com/compose/install/)
+installed on your system.
+
+```bash
+cd cluster/
+# Create 1 Master and 4 Spark workers
+./start-infra.sh
+
+# You can scale to 8 workers with the following script:
+./scale-workers.sh 8
+
+# To submit StreamSight, just run:
+./build-run-cluster.sh
+
+```
+
 
 
 ## Insight Declaration Examples

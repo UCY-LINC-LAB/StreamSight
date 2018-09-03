@@ -1,0 +1,111 @@
+version: '3.2'
+
+services:
+
+  master:
+    image: shuaicj/spark-master:2.1.1
+    ports:
+    - 8080:8080
+    networks:
+    - insights-net
+    deploy:
+      mode: replicated
+      resources:
+        limits:
+          cpus: '2'
+          memory: '2.0G'
+    environment:
+      MASTER: spark://master:7077
+      SPARK_PUBLIC_DNS: master
+
+    healthcheck:
+      test: ["CMD", "curl", "-f", "http://localhost:8080"]
+      interval: 5s
+      timeout: 3s
+      retries: 3
+    volumes:
+    - /tmp/spark/:/home/data/
+
+
+  slave:
+    image: shuaicj/spark-slave:2.1.1
+    command: spark://master:7077
+    deploy:
+      mode: replicated
+      replicas: 4
+      resources:
+        limits:
+          cpus: '1'
+          memory: '1.024G'
+    environment:
+      SPARK_WORKER_CORES: 1
+      SPARK_WORKER_MEMORY: '1024m'
+      SPARK_WORKER_PORT: 8881
+      SPARK_WORKER_WEBUI_PORT: 8081
+      SPARK_PUBLIC_DNS: worker
+    ports:
+    - :8081
+    networks:
+    - insights-net
+    depends_on:
+    - master
+    volumes:
+    - /tmp/spark:/home/data/
+
+  zookeeper:
+    image: wurstmeister/zookeeper
+    deploy:
+      mode: global
+      resources:
+        limits:
+          cpus: '1'
+          memory: '1G'
+    networks:
+    - insights-net
+    ports:
+    - "2181:2181"
+
+  kafka:
+    image: wurstmeister/kafka
+    deploy:
+      mode: global
+      resources:
+        limits:
+          cpus: '4'
+          memory: '8G'
+    networks:
+      insights-net:
+        aliases:
+        - "kafka"
+    #ports:
+    #  - '9092:9092'
+    ports:
+    - target: 9094
+      published: 9094
+      protocol: tcp
+      mode: host
+
+    environment:
+      #KAFKA_ADVERTISED_HOST_NAME: kafka
+      #KAFKA_ADVERTISED_PORT: 9092
+      #KAFKA_CREATE_TOPICS: "insights:1:1"
+      #KAFKA_LISTENERS: PLAINTEXT://0.0.0.0:9092
+      #KAFKA_ADVERTISED_LISTENERS: PLAINTEXT://kafka:9092,CLIENT://:tcp://localhost:9092
+
+      HOSTNAME_COMMAND: "docker info | grep ^Name: | cut -d' ' -f 2"
+      KAFKA_ZOOKEEPER_CONNECT: zookeeper:2181
+      KAFKA_LISTENER_SECURITY_PROTOCOL_MAP: INSIDE:PLAINTEXT,OUTSIDE:PLAINTEXT
+      KAFKA_ADVERTISED_LISTENERS: INSIDE://:9092,OUTSIDE://_{HOSTNAME_COMMAND}:9094
+      KAFKA_LISTENERS: INSIDE://:9092,OUTSIDE://:9094
+      KAFKA_INTER_BROKER_LISTENER_NAME: INSIDE
+    volumes:
+    - /var/run/docker.sock:/var/run/docker.sock
+    depends_on:
+    - zookeeper
+
+networks:
+  insights-net:
+    driver: overlay
+
+volumes:
+  data:
