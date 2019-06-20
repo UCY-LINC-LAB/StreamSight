@@ -89,10 +89,52 @@ cd cluster/
 
 ```
 
+## StreamSight Architecture
 
+The following figure depicts a high-level and abstract overview of the StreamSight framework. Users submit ad-hoc queries following the declarative query model and the system compiles these queries into low-level streaming commands. 
+
+![image](https://github.com/UCY-LINC-LAB/StreamSight/blob/readme-updates/img/compiling_phase.png)
+
+Once the executable artifact is produced, users can submit it to the underlying distributed processing engine. The raw monitoring metrics are fed into the processing engine where they 
+are transformed into analytic insights and streamed to a high-availability queuing system.
+
+![image](https://github.com/UCY-LINC-LAB/StreamSight/blob/readme-updates/img/runtime_phase.png)
 
 ## Insight Declaration Examples
-...
+In this section we present a few eaxmples for useful insights from monitoring a cloud infrastructure.
+
+### Example 1
+A useful insight that many companies need to monitor and take decisions on that is cpu utilization.
+So the following insight returns the average CPU utilization of a service for 30 seconds every 10 seconds.
+
+```
+cpu_utilization = COPMUTE (
+        ARITHMETIC_MEAN( cpu_user, 30 SECONDS )
+        + ARITHMETIC_MEAN( cpu_sys, 30 SECONDS )
+) EVERY 10 SECONDS ;
+```
+
+### Example 2
+The free space in ram can be crucial for some applications, thus,
+the following expression gives us the RAM Average Usage for 10 minutes every 30 seconds.
+
+```
+ram_usage_per_service = COPMUTE
+        ARITHMETIC_MEAN( service:ram , 10 MINUTES )
+EVERY 30 SECONDS ;
+```
+
+### Example 3
+Next we present an insight for maximum number of HTTP Requests per Second
+for 10 minutes which computes every 30 seconds grouped by region.
+For devops and developers, who works on web-based applications,
+the peak of traffic in a specific region can be a critical factor.
+
+```
+http_requests_per_seconds_by_region = COPMUTE
+        MAX( service:requests_per_seconds , 10 MINUTES ) BY Region
+EVERY 30 SECONDS ;
+```
 
 ## Configuration
 
