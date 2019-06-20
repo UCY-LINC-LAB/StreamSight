@@ -89,7 +89,16 @@ cd cluster/
 
 ```
 
+## StreamSight Architecture
 
+The following figure depicts a high-level and abstract overview of the StreamSight framework. Users submit ad-hoc queries following the declarative query model and the system compiles these queries into low-level streaming commands. 
+
+![image](https://github.com/UCY-LINC-LAB/StreamSight/blob/readme-updates/img/compiling_phase.png)
+
+Once the executable artifact is produced, users can submit it to the underlying distributed processing engine. The raw monitoring metrics are fed into the processing engine where they 
+are transformed into analytic insights and streamed to a high-availability queuing system.
+
+![image](https://github.com/UCY-LINC-LAB/StreamSight/blob/readme-updates/img/runtime_phase.png)
 
 ## Insight Declaration Examples
 ...
