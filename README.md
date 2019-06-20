@@ -107,7 +107,7 @@ cd cluster/
 ## Reference
 When using the framework please use the following reference to cite our work:
 
-TBD
+"StreamSight: A Query-Driven Framework for Streaming Analytics in Edge Computing", Z. Georgiou, M. Symeonides, D. Trihinas, G. Pallis, M. D. Dikaiakos, 11th IEEE/ACM International Conference on Utility and Cloud Computing (UCC 2018), Zurich, Switzerland, Dec 2018.
 
 ## Licence
 The framework is open-sourced under the Apache 2.0 License base. The codebase of the framework is maintained by the authors for academic research and is therefore provided "as is".
